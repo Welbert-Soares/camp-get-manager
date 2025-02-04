@@ -1,6 +1,6 @@
 
 
-import { z } from "zod";
+import type { z } from "zod";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
@@ -12,15 +12,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
-const formSchema = z.object({
-  name: z.string().trim().min(3, "O nome deve ter no mínimo 3 caracteres"),
-  email: z.string().email("Insira um e-mail válido"),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
-});
+import { registerSchema } from "../schemas";
+import { useRegister } from "../api/use-register";
 
 export const SignUpCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useRegister();
+
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -28,8 +27,8 @@ export const SignUpCard = () => {
     }
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+    mutate({ json: values });
   }
 
   return (

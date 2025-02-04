@@ -1,5 +1,5 @@
 
-import { z } from "zod";
+import type { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,23 +12,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
-const formSchema = z.object({
-  email: z.string().email("Insira um e-mail válido"),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
-});
+import { loginSchema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useLogin();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     }
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-  }
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    mutate({ json: values });
+  };
 
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
