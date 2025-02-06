@@ -12,9 +12,9 @@ export const useCreateWorkspace = () => {
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation<ResponseType, Error, RequestType>({
-		mutationFn: async ({ json }) => {
+		mutationFn: async ({ form }) => {
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-			const response = await client.api.workspaces["$post"]({ json });
+			const response = await client.api.workspaces["$post"]({ form });
 
 			if (!response.ok) {
 				throw new Error(
