@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -19,11 +20,20 @@ export const useRegister = () => {
 		mutationFn: async ({ json }) => {
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 			const response = await client.api.auth.register["$post"]({ json });
+
+			if (!response.ok) {
+				throw new Error("Erro ao criar conta, tente novamente mais tarde.");
+			}
+
 			return await response.json();
 		},
 		onSuccess: () => {
+			toast.success("Conta criada com sucesso!");
 			router.refresh();
 			queryClient.invalidateQueries({ queryKey: ["current"] });
+		},
+		onError: () => {
+			toast.error("Erro ao criar conta, tente novamente mais tarde.");
 		},
 	});
 

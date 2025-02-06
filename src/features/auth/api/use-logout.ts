@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { InferRequestType, InferResponseType } from "hono";
+import type { InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 
@@ -15,11 +16,20 @@ export const useLogout = () => {
 		mutationFn: async () => {
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 			const response = await client.api.auth.logout["$post"]();
+
+			if (!response.ok) {
+				throw new Error("Erro ao encerrar sessão, tente novamente.");
+			}
+
 			return await response.json();
 		},
 		onSuccess: () => {
+			toast.success("Sessão encerrada!");
 			router.refresh();
 			queryClient.invalidateQueries({ queryKey: ["current"] });
+		},
+		onError: () => {
+			toast.error("Erro ao encerrar sessão, tente novamente.");
 		},
 	});
 

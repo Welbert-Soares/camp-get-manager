@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -17,12 +18,19 @@ export const useLogin = () => {
 		mutationFn: async ({ json }) => {
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 			const response = await client.api.auth.login["$post"]({ json });
+
+			if (!response.ok) {
+				throw new Error("Erro ao fazer login, tente novamente.");
+			}
+
 			return await response.json();
 		},
 		onSuccess: () => {
+			toast.success("Bem vindo!");
 			router.refresh();
 			queryClient.invalidateQueries({ queryKey: ["current"] });
 		},
+		onError: () => [toast.error("Erro ao fazer login, tente novamente.")],
 	});
 
 	return mutation;
