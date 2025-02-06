@@ -27,6 +27,7 @@ export const useLogout = () => {
 			toast.success("Sessão encerrada!");
 			router.refresh();
 			queryClient.invalidateQueries({ queryKey: ["current"] });
+			queryClient.invalidateQueries({ queryKey: ["workspaces"] });
 		},
 		onError: () => {
 			toast.error("Erro ao encerrar sessão, tente novamente.");
