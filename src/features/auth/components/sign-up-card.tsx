@@ -1,4 +1,4 @@
-
+"use client";
 
 import type { z } from "zod";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
 
 export const SignUpCard = () => {
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -105,8 +105,8 @@ export const SignUpCard = () => {
               )}
             />
 
-            <Button disabled={false} size={"lg"} className="w-full">
-              Entrar
+            <Button disabled={isPending} size={"lg"} className="w-full">
+              Cadastrar
             </Button>
           </form>
         </Form>
@@ -117,7 +117,7 @@ export const SignUpCard = () => {
       </div>
       <CardContent className="p-7 flex flex-col gap-y-4">
         <Button
-          disabled={false}
+          disabled={isPending}
           variant={"secondary"}
           size={"lg"}
           className="w-full"
