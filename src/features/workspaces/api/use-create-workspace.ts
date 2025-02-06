@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { InferRequestType, InferResponseType } from "hono";
@@ -14,10 +15,21 @@ export const useCreateWorkspace = () => {
 		mutationFn: async ({ json }) => {
 			// biome-ignore lint/complexity/useLiteralKeys: <explanation>
 			const response = await client.api.workspaces["$post"]({ json });
+
+			if (!response.ok) {
+				throw new Error(
+					"Erro ao criar acampamento, tente novamente mais tarde.",
+				);
+			}
+
 			return await response.json();
 		},
 		onSuccess: () => {
+			toast.success("Acampamento criado com sucesso!");
 			queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+		},
+		onError: () => {
+			toast.error("Erro ao criar acampamento, tente novamente mais tarde.");
 		},
 	});
 

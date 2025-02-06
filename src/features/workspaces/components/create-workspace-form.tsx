@@ -85,11 +85,13 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 size="lg"
                 variant="secondary"
                 onClick={onCancel}
+                disabled={isPending}
               >
                 Cancelar
               </Button>
 
               <Button
+                disabled={isPending}
                 type="submit"
                 size="lg"
               >
