@@ -14,6 +14,8 @@ import { createWorkspaceSchema } from "../schemas";
 
 import { useCreateWorkspace } from "../api/use-create-workspace";
 
+import { cn } from "@/lib/utils";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -167,6 +169,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(!onCancel && "invisible")}
               >
                 Cancelar
               </Button>

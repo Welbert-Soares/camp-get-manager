@@ -33,7 +33,7 @@ export const getWorkspaces = async () => {
 		)
 
 		if (members.total === 0) {
-			return { data: { documents:[], total: 0 } };
+			return {  documents:[], total: 0 };
 		}
 		
 		const workspaceIds = members.documents.map((member) => member.workspaceId);
